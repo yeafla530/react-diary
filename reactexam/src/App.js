@@ -1,5 +1,6 @@
 import React from 'react';
 // import './App.css';
+import Counter from './Counter'
 import MyHeader from './MyHeader'
 import MyFooter from './MyFooter'
 
@@ -23,15 +24,9 @@ function App() {
     // 2. 최상위 태그 필요
     // <React.Fragment>
     //<>
-    <div style={style.App}>
+    <div>
       <MyHeader/>
-      <header className="App-header">
-        <h2 style={style.h2}>안녕 리액트 {name}</h2>
-        <b style={style.bold_text} id="bold_text">
-          {number}는 {number % 2 === 0 ? '짝수' : '홀수'}
-        </b>
-      </header>
-      <MyFooter />
+      <Counter />
     </div>
     //</>
     // </React.Fragment>
