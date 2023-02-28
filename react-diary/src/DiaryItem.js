@@ -1,4 +1,4 @@
-const DiaryItem = ({author, contents, emotion, created_date, id}) => {
+const DiaryItem = ({onDelete, author, contents, emotion, created_date, id}) => {
     return (
         <div className="DiaryItem">
             <div className="info">
@@ -7,6 +7,12 @@ const DiaryItem = ({author, contents, emotion, created_date, id}) => {
                 <span className="date">작성시간: {new Date(created_date).toLocaleString()}</span>
             </div>
             <div className="content">{contents}</div>
+            <button onClick={() => { 
+                console.log(id)
+                if (window.confirm(`${id+1}번째 일기를 정말 삭제하겠습니다?`)) {
+                    onDelete(id)
+                }
+            }}>삭제하기</button>
         </div>
     )
 }
