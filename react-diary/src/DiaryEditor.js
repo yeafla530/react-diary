@@ -1,6 +1,6 @@
 import {useRef, useState} from 'react';
 
-const DiaryEditor = () => {
+const DiaryEditor = ({onCreate}) => {
 
     const authorInput = useRef()
     const contentInput = useRef()
@@ -35,7 +35,14 @@ const DiaryEditor = () => {
             contentInput.current.focus();
             return
         }
+
+        onCreate(state.author, state.contents, state.emotion);
         alert('저장 성공')
+        setState({
+            author: "",
+            contents: "",
+            emotion: 1
+        })
     }
 
 
