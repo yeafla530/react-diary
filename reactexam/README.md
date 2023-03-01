@@ -51,11 +51,60 @@ npm start
 ㄴ src
 	ㄴ App.css : style 파일
 	ㄴ App.js : 컴포넌트, jsx문법 사용
-	ㄴ index.css :
-    ㄴ index.html : 
 	ㄴ package-lock.json : node_modules에 있는 목록이 작성되어있음
 	ㄴ package.json : node_modules에 있는 목록이 작성되어있음
 	
-ㄴ
 ```
 
+
+
+## es module system
+
+> `export default App`
+>
+> => 다른 파일에서 `import name from '경로'`로 사용할 수 있음
+
+
+
+## useEffect
+
+> class형에서 사용할 수 있었던 lifecycle을 hook을 통해  함수형 코드에서도 작성할 수 있게 됐다 (useEffect)
+
+
+
+1. mount
+
+   > 의존성 배열 ㅣ 배열 내 들어가있는값이 변화하면 콜백함수가 수행됨
+
+   ```
+   useEffect(()=>{
+   	// todo
+   	mount될 때 실행시킬 함수
+   },[]) // 의존성배열
+   ```
+
+   
+
+2. update
+
+   ```
+   useEffect(()=>{
+   	// todo
+   	text가 update될 때 실행시킬 함수
+   },[text])
+   ```
+
+   
+
+3. unmount
+
+   ```
+   useEffect(()=>{
+   	return () => {
+   		// todo
+   		unmount될 때 실행시킬 함수
+   	}
+   },[])
+   ```
+
+   
