@@ -87,18 +87,18 @@ function App() {
 
 
   // 일기 삭제 함수
-  const onRemove = (targetId) => {
+  const onRemove = useCallback((targetId) => {
     console.log(`${targetId}가 삭제되었습니다`)
-    const newDiaryList = data.filter((it) => it.id !== targetId)
-    setData(newDiaryList)
-  };
+    // 최신 state사용
+    setData((data)=>data.filter((it) => it.id !== targetId))
+  }, []);
 
   // 일기 수정 함수
-  const onEdit = (targetId, newContent) => {
-    setData(
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
       data.map((it) => it.id === targetId ? {...it, contents: newContent} : it)
     )
-  }
+  },[])
 
   // useMemo를 쓰면 함수가 아닌 값을 return 하게 됨
   // 연산최적화 

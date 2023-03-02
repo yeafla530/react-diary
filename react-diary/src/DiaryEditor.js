@@ -3,10 +3,6 @@ import React, {useEffect, useRef, useState} from 'react';
 // onCreate App Component가 변경될 때마다 렌더링됨
 const DiaryEditor = ({onCreate}) => {
 
-    useEffect(()=>{
-        console.log("DiaryEditor 렌더")
-    })
-
     const authorInput = useRef()
     const contentInput = useRef()
 
@@ -17,8 +13,6 @@ const DiaryEditor = ({onCreate}) => {
     })
 
     const handleChangeState = (e) => {
-        console.log(e.target.name)
-        console.log(e.target.value)
         setState({
             ...state,
             [e.target.name]: e.target.value
