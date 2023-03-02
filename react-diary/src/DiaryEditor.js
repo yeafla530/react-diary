@@ -1,6 +1,11 @@
-import {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
+// onCreate App Component가 변경될 때마다 렌더링됨
 const DiaryEditor = ({onCreate}) => {
+
+    useEffect(()=>{
+        console.log("DiaryEditor 렌더")
+    })
 
     const authorInput = useRef()
     const contentInput = useRef()
@@ -68,4 +73,4 @@ const DiaryEditor = ({onCreate}) => {
     </div>
 }
 
-export default DiaryEditor
+export default React.memo(DiaryEditor);

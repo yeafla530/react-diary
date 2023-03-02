@@ -1,8 +1,8 @@
 import './App.css'
 import DiaryEditor from "./DiaryEditor"
 import DiaryList from './DiaryList';
-import {useRef, useState, useEffect, useMemo} from 'react'
-import OptimizeTest from './OptimizeTest';
+import {useRef, useState, useEffect, useMemo, useCallback} from 'react'
+// import OptimizeTest from './OptimizeTest';
 
 // const dummyList = [
 //   {
@@ -66,7 +66,8 @@ function App() {
 
   
   // 일기 데이터 추가함수
-  const onCreate = (author, contents, emotion) => {
+  // useCallback : 함수의 재생성
+  const onCreate = useCallback((author, contents, emotion) => {
     const created_date = new Date().getTime()
     const newItem = {
       author,
@@ -76,8 +77,14 @@ function App() {
       id: dataId.current
     }
     dataId.current += 1
-    setData([newItem, ...data])
-  }
+    // setData([newItem, ...data])
+    // 함수형 업데이트 : 값을 전달하지 않고 함수를 전달
+    // data의 현재값을 참조할 수 있도록 함
+    // 항상 최신의 state를 참조할 수 있도록 도와주는 함수형 업데이트
+    setData((data)=>[newItem, ...data])
+  }, [] ) // depth 전달 - 빈배열이면 mount되는 시점 한번만 만들고 재사용함
+  //빈 배열로 전달 시 다이어리 추가했을 때, 20개 => 빈배열에 1개 추가한 data가 보임
+
 
   // 일기 삭제 함수
   const onRemove = (targetId) => {
@@ -110,7 +117,6 @@ function App() {
 
   return (
     <div className="App">
-      <OptimizeTest/>
       <DiaryEditor onCreate={onCreate}/>
       <div>전체일기 : {data.length}</div>
       <div>기분 좋은 일기 개수 : {goodCount}</div>
