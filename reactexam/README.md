@@ -90,8 +90,8 @@ npm start
    ```
    useEffect(()=>{
    	// todo
-   	text가 update될 때 실행시킬 함수
-   },[text])
+   	update될 때 실행시킬 함수
+   })
    ```
 
    
@@ -108,3 +108,62 @@ npm start
    ```
 
    
+
+## React.memo
+
+> 함수형 컴포넌트에 업데이트 조건 걸어줌
+>
+> react.memo는 고차컴포넌트(HOC)이다
+
+* 같은 props를 받으면 rerendering하지 않는 강화된 component를 돌려준다
+
+```
+const MyComponent = React.memo(function MyComponent(props) {
+  /* props를 사용하여 렌더링 */
+});
+```
+
+
+
+### example
+
+1. React.memo 적용 x
+   * 둘중에 하나라도 변화하면 둘다 rerendering됨
+
+```js
+// 둘중에 하나라도 변화하면 둘다 rerendering됨
+const TextView = ({text}) => {
+    useEffect(()=>{
+        console.log(`UseEffect :: Text : ${text}`)
+    })
+    return <div>{text}</div>
+}
+
+const CountView = ({count}) => {
+    useEffect(()=>{
+        console.log(`UseEffect :: Count : ${count}`)
+    })
+    return <div>{count}</div>
+}
+
+```
+
+2. React.memo 적용
+   * 각각 text나 count가 바뀔때만 작동됨 
+
+```js
+const TextView = React.memo(({text}) => {
+    useEffect(()=>{
+        console.log(`UseEffect :: Text : ${text}`)
+    })
+    return <div>{text}</div>
+})
+
+const CountView = React.memo(({count}) => {
+    useEffect(()=>{
+        console.log(`UseEffect :: Count : ${count}`)
+    })
+    return <div>{count}</div>
+})
+```
+

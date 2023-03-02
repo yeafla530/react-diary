@@ -1,35 +1,54 @@
 import React, {useState, useEffect} from 'react'
 
-// 둘중에 하나라도 변화하면 둘다 rerendering됨
-const TextView = React.memo(({text}) => {
-    useEffect(()=>{
-        console.log(`UseEffect :: Text : ${text}`)
-    })
-    return <div>{text}</div>
-})
+const CounterA = React.memo(({count}) => {
 
-const CountView = React.memo(({count}) => {
-    useEffect(()=>{
-        console.log(`UseEffect :: Count : ${count}`)
+    useEffect(() => {
+        console.log(`Counter A Update: ${count}`)
     })
     return <div>{count}</div>
 })
 
+const CounterB = ({obj}) => {
+    // 객체는 얕은 비교 > 주소를 비교
+    useEffect(() => {
+        console.log(`Counter B Update: ${obj.count}`)
+    })
+
+    return <div>{obj.count}</div>
+}
+
+const areEqual = (prevProps, nextProps) => {
+    // if (prevProps.obj.count === nextProps.obj.count) {
+    //     return true // 이전 프롭스 현재 프롭스가 같다 => 리렌더를 일으키지 않음
+    // }
+    // return false // rerender를 일으켜라
+
+    return prevProps.obj.count === nextProps.obj.count
+}
+
+const MemoizedCounterB = React.memo(CounterB, areEqual)
 
 const OptimizeTest = () => {
+
     const [count, setCount] = useState(1)
-    const [text, setText] = useState("")
-    
+    const [obj, setObj] = useState({
+        count: 1,
+    })
+
     return <div style={{padding: 50}}>
         <div>
-            <h2>count</h2>
-            <CountView count={count}/>   
-            <button onClick={() => setCount(count+1)}>+</button>
+            <h2>counter A</h2>
+            <CounterA count={count}/>    
+            {/* 상태가 바뀌진 않음 */}
+            <button onClick={() => setCount(count)}>A Button</button>
         </div>
         <div>
-            <h2>text</h2>
-            <TextView text={text}/>   
-            <input value={text} type="text" onChange={(e) => setText(e.target.value)} />
+            <h2>Counter B</h2>
+            <MemoizedCounterB obj={obj}/>
+            {/* count가 변경되지 않았는데 rerender됨 */}
+            <button onClick={()=>setObj({
+                count: obj.count
+            })}>B button</button>
         </div>
     </div>
 }
