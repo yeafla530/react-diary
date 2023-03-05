@@ -14,7 +14,7 @@
 
      
 
-2.  선언형 프로그래밍
+2. 선언형 프로그래밍
 
    * 목적을 바로 말하는 프로그래밍
    * 명령형 프로그래밍 : 절차를 하나하나 다 나열해야함 (jquery)
@@ -33,7 +33,7 @@
 ## Get Started
 
 ```
-cd reactexam
+cd react-diary
 npm start
 ```
 
@@ -290,7 +290,7 @@ const OptimizeTest = () => {
 
 1. DiaryList에서 삭제 누를 시 DiaryEditor Component도 같이 rerendering됨
 
-![image-20230302192422819](images/image-20230302192422819.png)
+![image-20230302192422819](./images/image-20230302192422819.png)
 
 2. 삭제를 누른다고 DiaryEditor까지 rerendering되는 것은 불필요
 3. 불필요한 렌더링 방지위해 useCallback사용
@@ -348,7 +348,7 @@ const onCreate = useCallback((author, contents, emotion) => {
 
 >  일기 생성 시 20개의 일기가 사라지고 생성한 1개의 일기만 남는 오류가 발생
 
-![image-20230302200208464](images/image-20230302200208464.png)
+![image-20230302200208464](./images/image-20230302200208464.png)
 
 
 
@@ -413,6 +413,8 @@ const onCreate = useCallback((author, contents, emotion) => {
 ## useReducer
 
 > 컴포넌트에서 상태변화 로직 분리
+>
+> 복잡한 상태변화 로직을 컴포넌트 밖에서 관리할 수 있도록 함 
 
 ```js
 const [count, dispatch] = useReducer(reducer, 1)
@@ -439,3 +441,130 @@ return() {
 * 1: count의 초기값
 * (state, action) : state - 가장 최신 state, action : 액션 객체의 값
 * {type : 1}: 액션 객체 = 상태 변화
+
+
+
+### 특징
+
+* 함수형 업데이트 필요 없이 호출하면 알아서 현재 state를 reducer함수가 참조해서 변경해준다
+  * dipendency array 신경 안써도 된다
+
+
+
+## Context
+
+> 컴포넌트 트리에 데이터 공급하기
+>
+> props drilling 문제 해결
+
+[한입 크기로 잘라먹는 리액트 중]
+
+![인프런 - 한입 크기로 잘라먹는 리액트](./images/image-20230305233606136.png)
+
+[Context 적용]
+
+![image-20230305234342393](images/image-20230305234342393.png)
+
+1. 모든 데이터를 같은 component
+2. 공급자 역할을 하는 Provider에 data 넘김
+3. Provider 자손에 해당하는 모든 Component에 직통으로 데이터를 줄 수 있음 
+4. Provider 자식 컴포넌트들은 직통으로 data를 전달받음
+
+**=> Props Drilling 문제 해결**
+
+
+
+![image-20230305234729208](images/image-20230305234729208.png)
+
+
+
+### 사용 방법
+
+**App.js**
+
+```js
+// Context 생성
+const MyContext = React.createContext(defaultValue)
+
+// Context Provider를 통한 데이터 공급
+<MyContext.Provider value={전역으로 전달하고자하는 값}>
+	{/*이 Context안에 위치할 자식 컴포넌트들*/}
+</MyContext.Provider>
+```
+
+
+
+**자식 component.js**
+
+```js
+import { DiaryStateContext } from './App';
+
+const value = useContext(MyContext)
+```
+
+
+
+### 문제점
+
+* state변화 함수들을 value에 그냥 전달해주면 될 것 같지만 Context도 component이기 때문에 **prop이 바뀌게 되면 rerendering된다. 하위 요소들도 함께 rerendering됨**
+  * 최적화가 다 풀리게 됨
+
+
+
+### 해결방법 : Context를 중첩으로 사용한다
+
+1. state Provider와 dispatch Provider를 따로 두어 중첩으로 사용해준다
+
+2. DiaryStateContext의 Provider의 props인 data가 변경될 때마다 rerendering진행된다.
+
+3. DiaryDispatchContext를 중첩으로 두어 onCreate, onRemove, onEdit은 따로 전달해준다
+4. data와 dispatch를 따로 전달하여 Provider를 중첩으로 두게 될 경우 data가 변경되어도 onCreate, onRemove, onEdit에 대한 하위 Provider에는 변동이 없어 최적화를 유지할 수 있다
+
+```
+export const DiaryStateContext = React.createContext();
+export const DiaryDispatchContext = React.createContext();
+
+// useMemo사용
+const memoizedDispatches = useMemo(() => {
+	return {onCreate, onRemove, onEdit}
+}, [])
+
+return(
+<DiaryStateContext.Provider value={data}>
+    {/* dispatch Provider */}
+    <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className="App">
+            <DiaryEditor />
+            <div>전체일기 : {data.length}</div>
+            <div>기분 좋은 일기 개수 : {goodCount}</div>
+            <div>기분 나쁜 일기 개수 : {badCount}</div>
+            <div>기분 좋은 일기 비율 : {goodRatio}</div>
+            <DiaryList/>
+        </div>
+    </DiaryDispatchContext.Provider>
+</DiaryStateContext.Provider>
+)
+```
+
+
+
+### 의문점 : Context API와 Redux의 차이점은?
+
+https://sewonzzang.tistory.com/53의 글을 참고하여 간단하게 정리해봤습니다
+
+1. 미들웨어
+   * 리덕스로 상태관리 시 리듀서 함수를 사용한다
+   * 리덕스의 미들웨어를 사용하면 액션 객체가 리듀서에서 처리되기 전에 우리가 원하는 작업을 수행할 수 있다
+   * 미들웨어는 주로 비덩기 작업 처리시 많이 사용된다
+2. Hooks
+   * Context API를 사용할 땐 커스텀 Hook을 만들어 사용해야하는데 리덕스에는 여러 기능이 존재한다
+   * connect 함수 사용하면 useSelector, useDispatch, useStore같은 Hooks를 사용하면 쉽게 상태 조회, 액션을 디스패치 할 수 있다
+   * connect함수와 useSelector함수를 사용하면 실제 상태가 바뀔 때만 컴포넌트가 리랜더링됨
+   * 반면 Context는 Context가 지니고 있는 상태가 바뀌면 해당 Context의 Provider내부 컴포넌트들이 모두 리렌더링 된다
+3. 상태
+   * Context사용해서 글로벌 상태를 관리할 땐 기능별로 Context를 만들어 사용한다
+   * 리덕스는 모든 글로벌 상태를 하나의 커다란 상태 객체에 넣어 사용하여 간편하다
+
+
+
+=> Vue의 Vuex와 EventBus같은 느낌이다

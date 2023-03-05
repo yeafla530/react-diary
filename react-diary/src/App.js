@@ -1,7 +1,7 @@
 import './App.css'
 import DiaryEditor from "./DiaryEditor"
 import DiaryList from './DiaryList';
-import {useRef, useReducer, useEffect, useMemo, useCallback} from 'react'
+import React, {useRef, useReducer, useEffect, useMemo, useCallback} from 'react'
 
 
 const reducer = (state, action) => {
@@ -34,6 +34,10 @@ const reducer = (state, action) => {
   }
 }
 
+export const DiaryStateContext = React.createContext();
+export const DiaryDispatchContext = React.createContext();
+
+
 // https://jsonplaceholder.typicode.com/comments
 const  App = () => {
   // const [data, setData] = useState([]);
@@ -41,7 +45,7 @@ const  App = () => {
   // useReducer로 변화
   const [data, dispatch] = useReducer(reducer, [])
 
-  const dataId = useRef(0)
+  const dataId = useRef(21)
   // api 호출
   const getData = async() => {
     const res = await fetch(
@@ -108,6 +112,17 @@ const  App = () => {
     // )
   },[])
 
+  // 재생성 됨
+  // const dispatches = {
+  //   onCreate, onRemove, onEdit
+  // }
+
+  // useMemo사용
+  const memoizedDispatches = useMemo(() => {
+    return {onCreate, onRemove, onEdit}
+  }, [])
+
+
   // useMemo를 쓰면 함수가 아닌 값을 return 하게 됨
   // 연산최적화 
   const getDiaryAnalysis = useMemo(
@@ -124,16 +139,22 @@ const  App = () => {
   const {goodCount, badCount, goodRatio} = getDiaryAnalysis;
 
   return (
-    <div className="App">
-      <DiaryEditor onCreate={onCreate}/>
-      <div>전체일기 : {data.length}</div>
-      <div>기분 좋은 일기 개수 : {goodCount}</div>
-      <div>기분 나쁜 일기 개수 : {badCount}</div>
-      <div>기분 좋은 일기 비율 : {goodRatio}</div>
-      
+    // state Provider
+    <DiaryStateContext.Provider value={data}>
+      {/* dispatch Provider */}
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className="App">
+          <DiaryEditor />
+          <div>전체일기 : {data.length}</div>
+          <div>기분 좋은 일기 개수 : {goodCount}</div>
+          <div>기분 나쁜 일기 개수 : {badCount}</div>
+          <div>기분 좋은 일기 비율 : {goodRatio}</div>
+          
 
-      <DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit}/>
-    </div>
+          <DiaryList/>
+        </div>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 

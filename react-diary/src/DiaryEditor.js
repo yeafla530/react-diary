@@ -1,7 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
+import { DiaryDispatchContext } from './App';
 
 // onCreate App Component가 변경될 때마다 렌더링됨
-const DiaryEditor = ({onCreate}) => {
+const DiaryEditor = () => {
+
+    // 비구조화할당으로 받기
+    const {onCreate} = useContext(DiaryDispatchContext)
 
     const authorInput = useRef()
     const contentInput = useRef()
