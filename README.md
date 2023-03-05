@@ -290,7 +290,7 @@ const OptimizeTest = () => {
 
 1. DiaryList에서 삭제 누를 시 DiaryEditor Component도 같이 rerendering됨
 
-![image-20230302192422819](images/image-20230302192422819.png)
+![image-20230302192422819](./images/image-20230302192422819.png)
 
 2. 삭제를 누른다고 DiaryEditor까지 rerendering되는 것은 불필요
 3. 불필요한 렌더링 방지위해 useCallback사용
@@ -348,7 +348,7 @@ const onCreate = useCallback((author, contents, emotion) => {
 
 >  일기 생성 시 20개의 일기가 사라지고 생성한 1개의 일기만 남는 오류가 발생
 
-![image-20230302200208464](images/image-20230302200208464.png)
+![image-20230302200208464](./images/image-20230302200208464.png)
 
 
 
