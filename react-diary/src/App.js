@@ -1,50 +1,52 @@
 import './App.css'
 import DiaryEditor from "./DiaryEditor"
 import DiaryList from './DiaryList';
-import {useRef, useState, useEffect, useMemo, useCallback} from 'react'
-// import OptimizeTest from './OptimizeTest';
+import {useRef, useReducer, useEffect, useMemo, useCallback} from 'react'
 
-// const dummyList = [
-//   {
-//     id: 1,
-//     author: "이예림",
-//     contents: "하이1",
-//     emotion: "1",
-//     created_date: new Date().getTime()
-//   },
-//   {
-//     id: 2,
-//     author: "이정",
-//     contents: "하이12",
-//     emotion: "4",
-//     created_date: new Date().getTime()
-//   },
-//   {
-//     id: 3,
-//     author: "김정환",
-//     contents: "하이13",
-//     emotion: "5",
-//     created_date: new Date().getTime()
-//   },
-//   {
-//     id: 4,
-//     author: "이건호",
-//     contents: "하이14",
-//     emotion: "4",
-//     created_date: new Date().getTime()
-//   },
-// ]
+
+const reducer = (state, action) => {
+  switch(action.type) {
+    // return 값이 data의 값이 됨
+    // 1. 초기화
+    case "INIT": {
+      return action.data
+    }
+    case "CREATE": {
+      const created_date = new Date().getTime()
+      const newItem = {
+        ...action.data,
+        created_date
+      }
+
+      return [newItem, ...state]
+    }
+
+    case "REMOVE": {
+      return state.filter((it) => it.id !== action.targetId)
+    }
+
+    case "EDIT": {
+      return state.map((it) => it.id === action.targetId ? {...it, contents:action.newContent} : it)
+    }
+
+    default:
+      return state 
+  }
+}
 
 // https://jsonplaceholder.typicode.com/comments
-function App() {
-  const [data, setData] = useState([]);
+const  App = () => {
+  // const [data, setData] = useState([]);
+
+  // useReducer로 변화
+  const [data, dispatch] = useReducer(reducer, [])
+
   const dataId = useRef(0)
   // api 호출
   const getData = async() => {
     const res = await fetch(
       'https://jsonplaceholder.typicode.com/comments'
     ).then((res) => res.json())
-    console.log(res)
 
     const initData = res.slice(0, 20).map((it) => {
       return {
@@ -55,7 +57,8 @@ function App() {
         id : it.id
       }
     })
-    setData(initData)
+    dispatch({type: "INIT", data:initData});
+    // setData(initData) : setData가 할일을 reducer함수가 하게됨
 
   }
 
@@ -68,20 +71,22 @@ function App() {
   // 일기 데이터 추가함수
   // useCallback : 함수의 재생성
   const onCreate = useCallback((author, contents, emotion) => {
-    const created_date = new Date().getTime()
-    const newItem = {
-      author,
-      contents,
-      emotion,
-      created_date,
-      id: dataId.current
-    }
+    dispatch({type:"CREATE", data:{author, contents, emotion, id: dataId.current}})
     dataId.current += 1
+    
+    // const created_date = new Date().getTime()
+    // const newItem = {
+    //   author,
+    //   contents,
+    //   emotion,
+    //   created_date,
+    //   id: dataId.current
+    // }
     // setData([newItem, ...data])
     // 함수형 업데이트 : 값을 전달하지 않고 함수를 전달
     // data의 현재값을 참조할 수 있도록 함
     // 항상 최신의 state를 참조할 수 있도록 도와주는 함수형 업데이트
-    setData((data)=>[newItem, ...data])
+    // setData((data)=>[newItem, ...data])
   }, [] ) // depth 전달 - 빈배열이면 mount되는 시점 한번만 만들고 재사용함
   //빈 배열로 전달 시 다이어리 추가했을 때, 20개 => 빈배열에 1개 추가한 data가 보임
 
@@ -89,15 +94,18 @@ function App() {
   // 일기 삭제 함수
   const onRemove = useCallback((targetId) => {
     console.log(`${targetId}가 삭제되었습니다`)
+    dispatch({type: "REMOVE", targetId})
     // 최신 state사용
-    setData((data)=>data.filter((it) => it.id !== targetId))
+    // setData((data)=>data.filter((it) => it.id !== targetId))
   }, []);
 
   // 일기 수정 함수
   const onEdit = useCallback((targetId, newContent) => {
-    setData((data) =>
-      data.map((it) => it.id === targetId ? {...it, contents: newContent} : it)
-    )
+    dispatch({type: "EDIT", targetId, newContent})
+    
+    // setData((data) =>
+    //   data.map((it) => it.id === targetId ? {...it, contents: newContent} : it)
+    // )
   },[])
 
   // useMemo를 쓰면 함수가 아닌 값을 return 하게 됨

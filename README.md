@@ -413,8 +413,6 @@ const onCreate = useCallback((author, contents, emotion) => {
 ## useReducer
 
 > 컴포넌트에서 상태변화 로직 분리
->
-> 복잡한 상태변화 로직을 컴포넌트 밖에서 관리할 수 있도록 함 
 
 ```js
 const [count, dispatch] = useReducer(reducer, 1)
@@ -441,10 +439,3 @@ return() {
 * 1: count의 초기값
 * (state, action) : state - 가장 최신 state, action : 액션 객체의 값
 * {type : 1}: 액션 객체 = 상태 변화
-
-
-
-### 특징
-
-* 함수형 업데이트 필요 없이 호출하면 알아서 현재 state를 reducer함수가 참조해서 변경해준다
-  * dipendency array 신경 안써도 된다
