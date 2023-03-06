@@ -14,15 +14,15 @@
 
 > 요청에 명시되어 있는 경로에 따라 알맞은 페이지를 결정하고 접속하는 과정
 
-![image-20230306150046423](C:\Users\이예림\AppData\Roaming\Typora\typora-user-images\image-20230306150046423.png)
+![image-20230306150046423](./images/image-20230306150046423.png)
 
 ### MPA: 웹서버가 여러개의 page를 갖고있는것
 
 > 페이지가 이동할 때마다 새로고침되어 페이지를 이동시킴
 
-![image-20230306150316652](C:\Users\이예림\AppData\Roaming\Typora\typora-user-images\image-20230306150316652.png)
+![image-20230306150316652](./images/image-20230306150316652.png)
 
-![image-20230306150536341](C:\Users\이예림\AppData\Roaming\Typora\typora-user-images\image-20230306150536341.png)
+![image-20230306150536341](./images/image-20230306150536341.png)
 
 ### SPA : 단일 페이지 어플리케이션
 
@@ -30,9 +30,9 @@
 >
 > 페이지를 오가도 새로고침이 일어나지 않음
 
-![image-20230306150611999](C:\Users\이예림\AppData\Roaming\Typora\typora-user-images\image-20230306150611999.png)
+![image-20230306150611999](./images/image-20230306150611999.png)
 
-![image-20230306151135807](C:\Users\이예림\AppData\Roaming\Typora\typora-user-images\image-20230306151135807.png)
+![image-20230306151135807](./images/image-20230306151135807.png)
 
 1. url 요청
 2. index.html을 보내주고 React App을 던져주게 됨
