@@ -71,6 +71,7 @@ function App() {
 
   return (
     <DiaryStateContext.Provider value={data}>
+      {/* dataState를 변화시키는 dispatch함수들을 객체로 넘김 */}
       <DiaryDispatchContext.Provider value={{
         onCreate,
         onEdit,
