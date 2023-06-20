@@ -42,50 +42,50 @@ const dummyData = [
     id: 1,
     emotion: 1,
     contents: '오늘의 일기1',
-    date: 1679089994702, // new Date().getTime()
+    date: 1687240995575, // new Date().getTime()
   },
   {
     id: 2,
     emotion: 2,
     contents: '오늘의 일기2',
-    date: 1679089994703, // new Date().getTime()
+    date: 1687240995576, // new Date().getTime()
   },
   {
     id: 3,
     emotion: 3,
     contents: '오늘의 일기3',
-    date: 1679089994704, // new Date().getTime()
+    date: 1687240995585, // new Date().getTime()
   },
   {
     id: 4,
     emotion: 4,
     contents: '오늘의 일기4',
-    date: 1679089994704, // new Date().getTime()
+    date: 1687240995586, // new Date().getTime()
   },
   {
     id: 5,
     emotion: 5,
     contents: '오늘의 일기5',
-    date: 1679089994705, // new Date().getTime()
+    date: 1687240995587, // new Date().getTime()
   },
   {
     id: 6,
     emotion: 3,
     contents: '오늘의 일기6',
-    date: 1679089994706, // new Date().getTime()
+    date: 1687240995588, // new Date().getTime()
   },
   {
     id: 7,
     emotion: 2,
     contents: '오늘의 일기7',
-    date: 1679089994707, // new Date().getTime()
+    date: 1687240995589, // new Date().getTime()
   },
 
 ]
 
 function App() {
   const [data, dispatch] = useReducer(reducer, dummyData)
-  console.log(data)
+  console.log(new Date().getTime())
   const dataId = useRef(0);
   //CREATE
   const onCreate = (date, contents, emotion) => {
