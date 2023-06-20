@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom"
 
 const Diary = () => {
-
-    const {id} = useParams()
+    // 상세페이지 :id값 전달됨
+    const {id} = useParams() // path variable
     console.log(id)
 
     return (
