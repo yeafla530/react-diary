@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, useContext, useEffect } from 'react';
 
 import MyHeader from './MyHeader';
 import MyButton from './MyButton';
@@ -60,7 +60,7 @@ const getStringDate = (date) => {
 }
 
 
-const DiaryEditor = () => {
+const DiaryEditor = ({isEdit, originData}) => {
     const navigate = useNavigate()
     // 자동 포커싱
     const contentRef = useRef()
@@ -78,7 +78,7 @@ const DiaryEditor = () => {
     
     // 1. DiaryDispatchContext를 받아온다 (App.js에서)
     // 2. Context매개변수인 onCreate를 받아온다
-    const {onCreate} = useContext(DiaryDispatchContext)
+    const {onCreate, onEdit} = useContext(DiaryDispatchContext)
     
     
     // App.js의 onCreate작동
@@ -89,16 +89,34 @@ const DiaryEditor = () => {
             return 
         }
 
-        // 작성 함수 실행
-        onCreate(date, content, emotion)
+        if (window.confirm(isEdit ? "일기를 수정하시겠습니까?" : "일기를 추가하시겠습니까?")) {
+            if (!isEdit) {
+                // 일기 생성
+                onCreate(date, content, emotion)
+            } else {
+                // 일기 수정
+                onEdit(originData.id, date, content, emotion)
+            }
+        }
+
+
         // 작성완료 후 뒤로가기로 작성페이지 오지 못하도록 막음
         navigate('/', {replace:true})
     }
 
+    useEffect(()=>{
+        if (isEdit) {
+            setDate(getStringDate(new Date(parseInt(originData.date))));
+            setEmotion(originData.emotion)
+            setContent(originData.content)
+        }
+
+    }, [isEdit, originData])
+
     return (
         <div className="DiaryEditor">
             <MyHeader 
-                headText={"새 일기쓰기"} 
+                headText={isEdit ? "일기 수정하기" : "새 일기쓰기"} 
                 leftChild={<MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)}/>}/>
             <div>
                 <section>
