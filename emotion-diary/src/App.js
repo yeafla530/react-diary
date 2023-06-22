@@ -130,7 +130,7 @@ function App() {
               {/* url 경로와 component를 mapping시켜줌 */}
               <Route path='/' element={<Home/>}/>
               <Route path='/new' element={<New/>}/>
-              <Route path='/edit' element={<Edit/>}/>
+              <Route path='/edit/:id' element={<Edit/>}/>
               <Route path='/diary/:id' element={<Diary/>}/>
 
             </Routes>
