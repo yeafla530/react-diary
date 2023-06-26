@@ -22,11 +22,14 @@ const Home = () => {
                 1
             ).getTime();
 
-            // 오늘 월의 마지막 날 (30/31/28일)
+            // 오늘 월의 마지막 날 (30/31/28일) => 시, 분, 초까지 바꿔줘야함
             const lastDay = new Date(
                 curDate.getFullYear(),
                 curDate.getMonth()+1,
-                0
+                0,
+                23, 
+                59, 
+                59
             ).getTime()
 
             // 바뀐 년월에 따라 리스트 불러오기
