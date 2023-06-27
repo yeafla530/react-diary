@@ -1,395 +1,313 @@
-# Emotion Diary-기술
+# Emotion Diary
 
-## Page Rounting
+한입 크기로 잘라먹는 리액트(React.js) 강의를 토대로 만든 감정 일기장 프로젝트입니다.
 
-### Routing이란?
+데이터는 localStorage를 이용해 일기장을 저장하는 방식을 사용했으며
 
-> 어떤 네트워크 내에서 통신 데이터를 보낼 경로를 선택하는 일련의 과정
+상태관리는 Context를 사용하여 props drilling을 방지하였습니다.
 
-- Router : 데이터의 경로를 실시간으로 지정해주는 역할을 하는 무언가
+배포는 firebase를 이용해 배포를 진행했습니다.
 
-- Routing : 경로를 정해주는 행위차체와 그런 과정들을 다 포함하여 일컫는 말
-
-### PAGE ROUTING이란?
-
-> 요청에 명시되어 있는 경로에 따라 알맞은 페이지를 결정하고 접속하는 과정
-
-![image-20230306150046423](./images/image-20230306150046423.png)
-
-### MPA: 웹서버가 여러개의 page를 갖고있는것
-
-> 페이지가 이동할 때마다 새로고침되어 페이지를 이동시킴
-
-![image-20230306150316652](./images/image-20230306150316652.png)
-
-![image-20230306150536341](./images/image-20230306150536341.png)
-
-### SPA : 단일 페이지 어플리케이션
-
-> 페이지가 한개밖에 없음
->
-> 페이지를 오가도 새로고침이 일어나지 않음
-
-![image-20230306150611999](./images/image-20230306150611999.png)
-
-![image-20230306151135807](./images/image-20230306151135807.png)
-
-1. url 요청
-2. index.html을 보내주고 React App을 던져주게 됨
-3. post버튼 클릭시 React App이 알아서 페이지를 업데이트 시킴 ( 서버와 통신x)
-4. 데이터만 server에서 받음
-5. **CSR** (Client Side Redering) : 클라이언트 측이 렌더링 하는 방식 - **react router**가 도와줌
+향후 피드백을 통해 업데이트를 진행할 예정입니다.
 
 
 
-## React router  : CSR방식
+#### 배포 사이트 URL
 
-> **신규 페이지를 불러오지 않는 상황에서 각각의 url에 따라 선택된 데이터를 하나의 페이지에서 렌더링 해주는 라이브러리**
->
-> Client Side Rendering 방식 이용할 수 있게 해줌
+https://yerm-react-diary.web.app/
 
-#### 설치
+
+
+
+
+## how to start
+
+> 프로젝트 구동 방법입니다
 
 ```
-npm install react-router@6 react-router-dom@6
+cd emotion-diary
+npm start
 ```
 
 
 
-#### BrowserRouter
 
-> 브라우저 History API를 사용해 현재 위치의 URL을 저장해주는 역할
 
-#### Routes
+## ✅ 기능소개
 
-> 자식 route들을 구성하고 있는 단위
->
-> routes 바깥은 url변경되어도 유지됨
+### 1️⃣Home
 
-#### Route
 
-> `path`를 통해 URL을 분기시킬 수 있다. 중첩해서 사용할 수 있다. **(중첩 라우팅)**
->
-> url과 component를 매핑 시켜줌
 
+#### 1. Header
 
+* 앞 뒤 버튼 클릭 시 한달씩 날짜가 변경된다
 
-※`<a></a>` : MPA 방식, url이동시 화면 전체가 렌더링됨
+![image-20230306150316652](./images/녹화_2023_03_18_06_45_53_681.gif)
 
-#### 사용방식
-
-```js
-import {BrowserRouter, Route, Routes} from 'react-router-dom'
-
-function App() {
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <h2>App.js</h2>
-        <Routes>
-          {/* url 경로와 component를 mapping시켜줌 */}
-          <Route path='/' element={<Home/>}/>
-          <Route path='/new' element={<New/>}/>
-          <Route path='/edit' element={<Edit/>}/>
-          <Route path='/diary' element={<Diary/>}/>
-
-        </Routes>
-        <RouteTest/>
-      </div>
-    </BrowserRouter>
-  );
-}
-
-export default App;
-```
-
-
-
-#### 링크 이동하기
-
-```js
-import {Link} from 'react-router-dom'
-
-const RouteTest = () => {
-    return <>
-        <Link to={'/'}>Home</Link>
-        <Link to={'/diary'}>Diary</Link>
-        <Link to={'/new'}>New</Link>
-        <Link to={'/edit'}>Edit</Link>
-    </>
-
-}
-export default RouteTest
-```
-
-
-
-## React Router Dom 기능
-
-> React에서 CSR기반 페이지 라우팅을 할 수 있게 해주는 라이브러리
->
-> 사용자가 정의하는 custom hooks 사용
-
-### 1. path variable : useParams
-
-> 상세페이지 구현할 때 경로의 변수를 사용
->
-> ex ) /diary/1 => 1번 일기
-
-
-
-* 예시 : useParams를 사용하면 params의 값을 찾아낼 수 있다
-
-```js
-import { useParams } from "react-router-dom"
-
-const Diary = () => {
-
-    const {id} = useParams()
-    console.log(id)
-
-    return (
-        <div>
-            <h1>Diary</h1>
-            <p>이곳은 일기 상세 페이지입니다</p>
-        </div>
-    )
-}
-```
-
-
-
-### 2. Query String : useSearchParams
-
-> 웹 페이지에 데이터를 전달하는 가장 간단한 방법
->
-> ex ) /edit?id=10&mode=dark
-
-* ?뒤에 있는 params는 page routing에 영향을 주지 않는다
-* 실시간으로 query String을 바꿀 수 있는 상태변화 함수도 제공 (비구조화 할당 방식)
-* setSearchParams를 이용해 query string 변경 가능
-
-```js
-import {useSearchParams} from "react-router-dom"
-
-const Edit = () => {
-    // 실시간으로 query string을 바꿀수 있는 상태변화 함수도 제공
-    const [searchParams, setSearchParams] = useSearchParams();
-    const id = searchParams.get('id')
-
-    const mode = searchParams.get('mode')
-    console.log(id, mode) // 10, dark
-
-    return (
-        <div>
-            <h1>Edit</h1>
-            <p>이곳은 일기 수정 페이지입니다</p>
-            <button onClick={()=>setSearchParams({who:"winterlood"})}>QS 바꾸기</button>
-           
-        </div>
-    )
-}
-
-```
-
-
-
-### 3. Page Moving : useNavigate
-
-> 링크 태그를 클릭안했을 때도 의도적으로 페이지를 바꿀 수 있다
->
-> 로그인 안된 사용자가 홈으로 가려할 때, 로그인 체크하여 강제로 로그인페이지로 보내버릴 수 있음
-
-
-
-* 반환되는 함수를 navigate로 받아 원하는 경로로 이동가능하게 함
-
-```js
-import {useNavigate, useSearchParams} from "react-router-dom"
-
-const Edit = () => {
-    const navigate = useNavigate()
-    
-    return (
-        <div>
-            <h1>Edit</h1>
-            <p>이곳은 일기 수정 페이지입니다</p>
-            <button onClick={()=>{navigate('/')}}>HOME으로 가기</button>
-            <button onClick={()=>{navigate(-1)}}>뒤로가기</button>
-        </div>
-    )
-}
-
-```
-
-
-
-## JSX
-
-### prcess.env.PUBLIC_URL
-
-> 어떤 경로에서든 public의 경로를 찾을 수 있다
-
-```html
-<img src={process.env.PUBLIC_URL + `/assets/emotion1.png`} alt="" />
-```
-
-
-
-### className
-
-> type에 따른 className적용
->
-> className 여러개일경우 리스트로 묶고 join으로 합쳐주기
-
-```html
-<button className={["MyButton", `Mybutton_${type}`].join(" ")} onClick={onClick}></button>
-
-```
-
-
-
-## 기초공사
-
-1. 상태관리 세팅
-
-> 전반적 사용될 일기 데이터 state 관리 로직 작성
->
-> useReducer를 이용한 상태관리
+##### 코드 설명
 
 ```jsx
-const reducer = (state, action) => {
-  // return state 
-  let newState = []
-  switch(action.type) {
-    case "INIT": {
-      return action.data;
+const [data, setData] = useState([])
+const [curDate, setCurDate] = useState(new Date())  
+
+// 바뀐 년원에 따라 리스트 불러오기
+useEffect(()=>{
+    // 일기가 있으면 적용
+	if (diaryList.length >= 1) {
+        // 해당 월의 1일이 됨
+        const firstDay = new Date(
+        	curDate.getFullYear(), 
+        	curDate.getMonth(),
+        1).getTime();
+
+        // 오늘 월의 마지막 날 (30/31/28일)
+        const lastDay = new Date(
+            curDate.getFullYear(),
+            curDate.getMonth()+1,
+            0
+        ).getTime()
+
+        // 바뀐 년월에 따라 리스트 불러오기
+        setData(diaryList.filter((it) => firstDay <= it.date && it.date <= lastDay))
+	}
+
+
+},[diaryList, curDate]) // diaryList를 넣어주어야 일기 생성, 수정, 삭제시 다이어리 리스트도 변경됨
+
+
+	// 한달씩 미래로
+    const increaseMonth = () => {
+        setCurDate(new Date(curDate.getFullYear(), curDate.getMonth()+1, curDate.getDate()))
     }
-    case "CREATE": {
-      
-      newState = [action.data, ...state]
-      break
+    // 한달씩 과거로
+    const decreaseMonth = () => {
+        setCurDate(new Date(curDate.getFullYear(), curDate.getMonth()-1, curDate.getDate()))
     }
-    case "REMOVE": {
-      newState = state.filter((it)=>it.id !== action.targetId);
-      break;
-    }
-    case "EDIT": {
-      newState = state.map((it)=> it.id === action.data.id ? {...action.data} : it)
-      break;
-    }
-    default: 
-      return state;    
-  }
-  return newState;
-}
 
-```
-
-```jsx
-function App() {
-
-  const [data, dispatch] = useReducer([reducer, []])
-  const dataId = useRef(0);
-  //CREATE
-  const onCreate = (date, contents, emotion) => {
-    dispatch({type: "CREATE", data: {
-      id: dataId.current,
-      date: new Date(date).getTime(),
-      contents,
-      emotion
-    }})
-    dataId.current += 1
-  }
-
-  //REMOVE
-  const onRemove = (targetId) => {
-    dispatch({type: "REMOVE", targetId})
-  }
-
-  // EDIT
-  const onEdit = (targetId, date, contents, emotion) => {
-    dispatch({
-      type: "EDIT",
-      data: {
-        id: targetId,
-        date: new Date(date).getTime(),
-        contents,
-        emotion
-      }
-    })
-  }
-  ...
-}
-```
-
-
-
-2. 프로젝트 state context 세팅
-
-> 일기 데이터 state공급할 context 생성하고 provider로 공급
->
-> context를 이용한 component 트리에 데이터 공급
-
- ```jsx
-// 2. component 데이터 관리
-export const DiaryStateContext = React.createContext();
-
-...
-
-<DiaryStateContext.Provider value={data}>
-
-    <BrowserRouter>
-        <div className="App">
-            <Routes>
-            {/* url 경로와 component를 mapping시켜줌 */}
-                <Route path='/' element={<Home/>}/>
-                <Route path='/new' element={<New/>}/>
-                <Route path='/edit' element={<Edit/>}/>
-                <Route path='/diary/:id' element={<Diary/>}/>
-
-            </Routes>
-        </div>
-    </BrowserRouter>
-</DiaryStateContext.Provider>
- ```
-
-
-
-3. 프로젝트 dispatch context 세팅
-
-> 일기 데이터 state의 dispatch 함수들 공급할 context를 생성하고 Provider로 공급하기
->
-> value가 변경될때마다 리렌더 되는 현상 막기 위해 하위 Context 생성
-
-```jsx
-// 2. component 데이터 관리
-export const DiaryStateContext = React.createContext();
-// 3. dispatch context 세팅
-export const DiaryDispatchContext = React.createContext()
 
 return (
-    <DiaryStateContext.Provider value={data}>
-      <DiaryDispatchContext.Provider value={{
-        onCreate,
-        onEdit,
-        onRemove
-      }}>
-        <BrowserRouter>
-          <div className="App">
-            <Routes>
-              {/* url 경로와 component를 mapping시켜줌 */}
-              <Route path='/' element={<Home/>}/>
-              <Route path='/new' element={<New/>}/>
-              <Route path='/edit' element={<Edit/>}/>
-              <Route path='/diary/:id' element={<Diary/>}/>
-
-            </Routes>
-          </div>
-        </BrowserRouter>
-      </DiaryDispatchContext.Provider>
-    </DiaryStateContext.Provider>
-  );
+    <div>
+    	<MyHeader 
+        headText={headText} 
+        leftChild={<MyButton text={'<'} onClick={decreaseMonth}/>} 
+        rightChild={<MyButton text={'>'} onClick={increaseMonth}/>}/>
+    </div>
+)
 ```
 
 
+
+
+
+#### 2. 정렬 및 필터
+
+#### 코드 설명
+
+> 감정필터와 시간순 정렬을 통해 뽑아진 array를return 해준다. 
+
+```javascript
+// DiaryList정렬된 리스트 반환하는 함수
+const getProcessDiaryList = () => {
+    // 감정을 필터링해주는 함수
+    const filterCallBack = (item)=>{
+        if (emotionType === 'good') {
+            return parseInt(item.emotion) <= 3
+        } else {
+            return parseInt(item.emotion) > 3
+        }
+    }
+    // 최신순, 오래된순 정렬해주는 함수
+    const compare = (a, b) => {
+        // 최신순 정렬
+        if (sortType === 'latest') {
+            return parseInt(b.date) - parseInt(a.date)
+        } else {
+            return parseInt(a.date) - parseInt(b.date)
+        }
+    }
+
+    // diaryList를 JSON화 시켜서 문자로 바꾸고 다시 JSON화 시켜줌
+    const copyList = JSON.parse(JSON.stringify(diaryList))
+    const filterredList = emotionType === 'all' ? copyList : copyList.filter((it)=>filterCallBack(it))
+    const sortedList = filterredList.sort(compare)
+    return sortedList;
+}
+```
+
+> DiaryList에서 필터링된 리스트를 받아준다
+
+```jsx
+return <div className="DiaryList">
+    ...
+    {getProcessDiaryList().map((it)=>(
+    	<DiaryItem key={it.id} {...it}/>
+    ))}
+</div>
+```
+
+
+
+
+
+1. 시간순 정렬 (최신순, 오래된순)
+
+   
+
+   * 최신순
+
+   <img src="images/image-20230620195834954.png" alt="image-20230620195834954" style="zoom:50%;" />
+
+   
+
+   * 오래된 순
+
+   <img src="images/image-20230620195858158.png" alt="image-20230620195858158" style="zoom:50%;" />
+
+   
+
+2. 감정 필터
+
+   * 좋은 감정만
+
+   <img src="images/image-20230620200514868.png" alt="image-20230620200514868" style="zoom:50%;" />
+
+   * 안좋은 감정만
+
+     <img src="images/image-20230620200555947.png" alt="image-20230620200555947" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+## ✅ 최적화
+
+### 문제점
+
+1. 날짜를 넘길때마다 select box 리렌더링 발생
+2. 최신순/오래된 순 변경시 diaryItem 리렌더링 발생
+3. 일기 수정 페이지 -> 내용 수정시 감정 이모지에도 리렌더링 발생
+
+
+
+### 해결방법
+
+1. React.memo를 사용하여 고착 컴포넌트로 만든다
+
+   * export 에 사용시
+
+   ```jsx
+   export default React.memo(EmotionItem)
+   ```
+
+   * 함수에 사용시
+
+   ```jsx
+   // React.memo를 통해 고착 컴포넌트로 만든다
+   const ControlMenu = React.memo(({value, onChange, optionList})=>{
+       useEffect(()=>{
+           console.log("Control Menu")
+       })
+       return <select className="ControlMenu" value={value} onChange={(e)=>onChange(e.target.value)}>
+           {optionList.map((it, idx)=><option key={idx} value={it.value}>{it.name}</option>)}
+       </select>
+   })
+   ```
+
+   
+
+2. React.memo사용시 useCallback처리도 함께 되어야하는데 useState를 이용한 set함수는 자체만으로 useCallback처리가 되기 때문에 따로 적용해주지 않아도됨
+
+3. handle함수를 따로 만들게 되면 useCallback까지 처리해 주어야함
+
+   ```js
+   // 이처럼 사용하기 위해서는 useCallback까지 적용해주어야함
+   const handleSetSortType = (sortType) => {
+       setSortType(sortType)
+   }
+   ```
+
+   
+
+4. useCallback 적용
+
+   ```js
+   // 최적화4. useCallback으로 메모이제이션 진행
+   // 가장 최신의 state를 받아올 필요는 없으므로
+   // 함수형 업데이트는 진행하지 않는다
+   // 함수형 업데이트 : setData((data) => [newItem, ...data]);
+   const handleClickEmote = useCallback((emotion) => {
+   	setEmotion(emotion)
+   }, [])
+   ```
+
+   * cf) 함수형 업데이트 : 값을 전달하지 않고 함수를 전달
+
+     data의 현재값을 참조할 수 있도록 하여 항상 최신의 state를 참조할 수 있도록 도와줌
+
+     ```
+     const onCreate = useCallback(
+       (author, contents, emotion) => {
+         const created_date = new Date().getTime();
+         const newItem = {
+           author,
+           contents,
+           emotion,
+           created_date,
+           id: dataId.current,
+         };
+         dataId.current += 1;
+         // 함수형 업데이트
+         setData([newItem, ...data]);
+       },
+       [data]
+     );
+     ```
+
+
+
+
+
+## ✅build 및 배포
+
+* build 명령어
+
+  ```
+  npm run build
+  npm install -g serve
+  serve -s build
+  ```
+
+  
+
+
+
+### firebase를 이용한 배포
+
+* 배포 과정 (명령 프롬프트)
+
+  1. Firebase CLI 설치
+
+     ```
+     npm install -g firebase-tools
+     ```
+
+  2. 프로젝트 초기화
+
+     ```
+     firebase login
+     
+     firebase init
+     ```
+
+  3. 배포
+
+     ```
+     firebase deploy --only hosting
+     ```
+
+     
