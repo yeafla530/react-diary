@@ -12,6 +12,13 @@ const Diary = () => {
     const diaryList = useContext(DiaryStateContext)
     const navigate = useNavigate();
     const [data, setData] = useState();
+
+    // mount되었을 때 타이틀 변경
+    useEffect(()=>{
+        const titleElement = document.getElementsByTagName('title')[0];
+        titleElement.innerHTML = `옒의 감정일기장 - ${id}번 일기`
+    },[])
+
     useEffect(()=>{
         if (diaryList.length >= 1) {
             const targetDiary = diaryList.find((it) => parseInt(it.id) === parseInt(id))

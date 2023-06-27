@@ -24,12 +24,16 @@
      - State Change > Compute Diff(업데이트 상황) > Re-render
      - Compute Diff과정이 Browser DOM과 Virtual DOM의 차이점
 
+
+
 ## Get Started
 
 ```
 cd react-diary
 npm start
 ```
+
+
 
 ## document structure
 
@@ -48,11 +52,15 @@ npm start
 
 ```
 
+
+
 ## es module system
 
 > `export default App`
 >
 > => 다른 파일에서 `import name from '경로'`로 사용할 수 있음
+
+
 
 ## useEffect
 
@@ -89,6 +97,8 @@ npm start
    },[])
    ```
 
+
+
 ## React.memo
 
 > 함수형 컴포넌트에 업데이트 조건 걸어줌
@@ -102,6 +112,8 @@ const MyComponent = React.memo(function MyComponent(props) {
   /* props를 사용하여 렌더링 */
 });
 ```
+
+
 
 ### example
 
@@ -260,6 +272,8 @@ const OptimizeTest = () => {
 };
 ```
 
+
+
 ## 컴포넌트 최적화 : useCallBack
 
 > 메모이제이션된 콜백을 반환한다
@@ -274,6 +288,8 @@ const OptimizeTest = () => {
 
 2. 삭제를 누른다고 DiaryEditor까지 rerendering되는 것은 불필요
 3. 불필요한 렌더링 방지위해 useCallback사용
+
+
 
 ### useCallback
 
@@ -292,6 +308,8 @@ const memoizedCallback = useCallback(
 
 - 함수를 재생성함
 - [] : depth, 빈 배열이면 mount되는 시점에 한번만 실행됨
+
+
 
 ### 해결방법
 
@@ -318,11 +336,17 @@ const onCreate = useCallback((author, contents, emotion) => {
 }, []);
 ```
 
+
+
+
+
 ### 문제점1
 
 > 일기 생성 시 20개의 일기가 사라지고 생성한 1개의 일기만 남는 오류가 발생
 
 ![image-20230302200208464](./images/image-20230302200208464.png)
+
+
 
 #### 원인
 
@@ -330,6 +354,8 @@ const onCreate = useCallback((author, contents, emotion) => {
 - mount했을 때의 배열은 빈배열,,! data의 마지막이 []이기 때문에 1개만 생성된 것
 - 함수는 컴포넌트가 재생성될 때 다시 생성되는 이유가 있음
   - 현재 state값을 참조할 수 있어야하기 때문에
+
+
 
 #### 해결방법1
 
@@ -357,6 +383,8 @@ const onCreate = useCallback(
 
 **우리가 원하는 동작** | data가 변화해도 onCreate함수가 생성되지 않도록 하기
 
+
+
 #### 해결방법2
 
 - 함수형 업데이트 진행
@@ -378,6 +406,10 @@ const onCreate = useCallback((author, contents, emotion) => {
   setData((data) => [newItem, ...data]);
 }, []);
 ```
+
+
+
+
 
 ## useReducer
 
@@ -416,6 +448,10 @@ return() {
 - 함수형 업데이트 필요 없이 호출하면 알아서 현재 state를 reducer함수가 참조해서 변경해준다
   - dipendency array 신경 안써도 된다
 
+
+
+
+
 ## Context
 
 > 컴포넌트 트리에 데이터 공급하기
@@ -439,6 +475,8 @@ return() {
 
 ![image-20230305234729208](images/image-20230305234729208.png)
 
+
+
 ### 사용 방법
 
 **App.js**
@@ -461,10 +499,14 @@ import { DiaryStateContext } from "./App";
 const value = useContext(MyContext);
 ```
 
+
+
 ### 문제점
 
 - state변화 함수들을 value에 그냥 전달해주면 될 것 같지만 Context도 component이기 때문에 **prop이 바뀌게 되면 rerendering된다. 하위 요소들도 함께 rerendering됨**
   - 최적화가 다 풀리게 됨
+
+
 
 ### 해결방법 : Context를 중첩으로 사용한다
 
@@ -500,6 +542,8 @@ return(
 </DiaryStateContext.Provider>
 )
 ```
+
+
 
 ### 의문점 : Context API와 Redux의 차이점은?
 

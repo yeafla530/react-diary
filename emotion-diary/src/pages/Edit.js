@@ -12,6 +12,12 @@ const Edit = () => {
     const diaryList = useContext(DiaryStateContext)
     // console.log(diaryList)
 
+    // mount되었을 때 타이틀 변경
+    useEffect(()=>{
+        const titleElement = document.getElementsByTagName('title')[0];
+        titleElement.innerHTML = `옒의 감정일기장 - ${id}번 수정`
+    },[])
+
     // Edit component Mount됐을때 실행
     // id나 diaryList가 변화하면 꺼내온다
     useEffect(()=>{
