@@ -1,6 +1,6 @@
 import MyButton from "./MyButton";
 import {useNavigate} from "react-router"
-
+import React from 'react';
 
 const DiaryItem = ({id, emotion, contents, date}) => {
     const navigate = useNavigate()
@@ -26,7 +26,7 @@ const DiaryItem = ({id, emotion, contents, date}) => {
         <div className="info_wrapper" onClick={goDetail}>
             <div className="diary_date">{strDate}</div>
             <div className="diary_content_preview">
-                {contents.slice(0, 25)}
+                {contents ? contents.slice(0, 25) : ''}
             </div>
         </div>
         <div className="btn_wrapper">
@@ -35,4 +35,4 @@ const DiaryItem = ({id, emotion, contents, date}) => {
     </div>
 }
 
-export default DiaryItem
+export default React.memo(DiaryItem)

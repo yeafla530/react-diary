@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useContext, useEffect } from 'react';
+import { useState, useRef, useContext, useEffect, useCallback } from 'react';
 
 import MyHeader from './MyHeader';
 import MyButton from './MyButton';
@@ -23,15 +23,19 @@ const DiaryEditor = ({isEdit, originData}) => {
     const [date, setDate] = useState(getStringDate(new Date()))
 
     // 감정을 클릭하면 바뀔 수 있도록
-    const handleClickEmote = (emotion) => {
+    // 최적화4. useCallback으로 메모이제이션 진행
+    // 가장 최신의 state를 받아올 필요는 없으므로
+    // 함수형 업데이트는 진행하지 않는다
+    // 함수형 업데이트 : setData((data) => [newItem, ...data]);
+    const handleClickEmote = useCallback((emotion) => {
         setEmotion(emotion)
-    }
+    }, [])
 
     // 작성완료
     
     // 1. DiaryDispatchContext를 받아온다 (App.js에서)
     // 2. Context매개변수인 onCreate를 받아온다
-    const {onCreate, onEdit} = useContext(DiaryDispatchContext)
+    const {onCreate, onEdit, onRemove} = useContext(DiaryDispatchContext)
     
     
     // App.js의 onCreate작동
@@ -57,20 +61,35 @@ const DiaryEditor = ({isEdit, originData}) => {
         navigate('/', {replace:true})
     }
 
+    // 삭제하기
+    const handleRemove = () => {
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            onRemove(originData.id)
+            navigate('/', {replace:true})
+        }
+    }
+
     useEffect(()=>{
         if (isEdit) {
             setDate(getStringDate(new Date(parseInt(originData.date))));
             setEmotion(originData.emotion)
-            setContent(originData.content)
+            setContent(originData.contents)
         }
-
+        console.log(originData)
     }, [isEdit, originData])
 
     return (
         <div className="DiaryEditor">
             <MyHeader 
                 headText={isEdit ? "일기 수정하기" : "새 일기쓰기"} 
-                leftChild={<MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)}/>}/>
+                leftChild={<MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)}/>}
+                rightChild={
+                    isEdit && (
+                        <MyButton text={"삭제하기"} type={"nagative"} onClick={handleRemove}/> 
+                    )
+                }
+                />
+                
             <div>
                 <section>
                     <h4>오늘은 언제인가요?</h4>

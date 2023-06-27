@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 
 import './App.css';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
@@ -7,6 +7,7 @@ import New from './pages/New'
 import Edit from './pages/Edit'
 import Diary from './pages/Diary'
 
+// 변화할때마다 localStorage에 일기 저장
 const reducer = (state, action) => {
   // 1. useReducer 상태 관리
   let newState = []
@@ -30,6 +31,8 @@ const reducer = (state, action) => {
     default: 
       return state;    
   }
+  console.log(newState)
+  localStorage.setItem('diary', JSON.stringify(newState))
   return newState;
 }
 // 2. component 데이터 관리
@@ -37,56 +40,25 @@ export const DiaryStateContext = React.createContext();
 // 3. dispatch context 세팅
 export const DiaryDispatchContext = React.createContext()
 
-const dummyData = [
-  {
-    id: 1,
-    emotion: 1,
-    contents: '오늘의 일기1',
-    date: 1687240995575, // new Date().getTime()
-  },
-  {
-    id: 2,
-    emotion: 2,
-    contents: '오늘의 일기2',
-    date: 1687240995576, // new Date().getTime()
-  },
-  {
-    id: 3,
-    emotion: 3,
-    contents: '오늘의 일기3',
-    date: 1687240995585, // new Date().getTime()
-  },
-  {
-    id: 4,
-    emotion: 4,
-    contents: '오늘의 일기4',
-    date: 1687240995586, // new Date().getTime()
-  },
-  {
-    id: 5,
-    emotion: 5,
-    contents: '오늘의 일기5',
-    date: 1687240995587, // new Date().getTime()
-  },
-  {
-    id: 6,
-    emotion: 3,
-    contents: '오늘의 일기6',
-    date: 1687240995588, // new Date().getTime()
-  },
-  {
-    id: 7,
-    emotion: 2,
-    contents: '오늘의 일기7',
-    date: 1687240995589, // new Date().getTime()
-  },
-
-]
 
 function App() {
-  const [data, dispatch] = useReducer(reducer, dummyData)
-  console.log(new Date().getTime())
-  const dataId = useRef(8);
+
+  const [data, dispatch] = useReducer(reducer, [])
+
+  useEffect(()=>{
+    const localData = localStorage.getItem('diary')
+    if (localData) {
+      const diaryList = JSON.parse(localData).sort((a,b)=>parseInt(b.id) - parseInt(a.id))
+      dataId.current = parseInt(diaryList[0].id) + 1
+
+      console.log(diaryList)
+      console.log(dataId)
+
+      dispatch({type: "INIT", data: diaryList})
+    }
+  }, [])
+
+  const dataId = useRef(0);
   //CREATE
   const onCreate = (date, contents, emotion) => {
     dispatch({type: "CREATE", data: {
