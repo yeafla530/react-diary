@@ -1,10 +1,10 @@
-# Emotion Diary
+# 📙 Emotion Diary
 
 한입 크기로 잘라먹는 리액트(React.js) 강의를 토대로 만든 감정 일기장 프로젝트입니다.
 
 데이터는 localStorage를 이용해 일기장을 저장하는 방식을 사용했으며
 
-상태관리는 Context를 사용하여 props drilling을 방지하였습니다.
+react router를 사용했으며, 상태관리는 Context를 사용하여 props drilling을 방지하였습니다.
 
 배포는 firebase를 이용해 배포를 진행했습니다.
 
@@ -12,15 +12,27 @@
 
 
 
-#### 배포 사이트 URL
+## 🔗 정리
+
+#### ▶ 배포 사이트 URL
+
+<img src="images/image-20230628202201555.png" alt="image-20230628202201555" style="zoom: 80%;" />
 
 https://yerm-react-diary.web.app/
 
 
 
+#### ▶ 기술 정리
+
+[Emotion-Diary React 기술 정리](./README2.md)
+
+[React 기본 문법 정리](./react-diary/README.md)
 
 
-## how to start
+
+
+
+## ✅ how to start
 
 > 프로젝트 구동 방법입니다
 
@@ -35,7 +47,7 @@ npm start
 
 ## ✅ 기능소개
 
-### 1️⃣Home
+### 1️⃣ Home
 
 
 
@@ -61,11 +73,14 @@ useEffect(()=>{
         	curDate.getMonth(),
         1).getTime();
 
-        // 오늘 월의 마지막 날 (30/31/28일)
+        // 오늘 월의 마지막 날 (30/31/28일) => 시, 분, 초까지 바꿔줘야함
         const lastDay = new Date(
             curDate.getFullYear(),
             curDate.getMonth()+1,
-            0
+            0,
+            23, 
+            59, 
+            59
         ).getTime()
 
         // 바뀐 년월에 따라 리스트 불러오기
@@ -87,6 +102,7 @@ useEffect(()=>{
 
 
 return (
+    // Header
     <div>
     	<MyHeader 
         headText={headText} 
@@ -179,6 +195,28 @@ return <div className="DiaryList">
 
 
 
+
+### 2️⃣ 일기 작성 및 수정(Create / Update)
+
+![image-20230628202658767](images/image-20230628202658767.png)
+
+
+
+* 날자와 감정, 글 작성 후 작성 완료
+* 동일한 부분은 component 생성 (*pages/DiaryEditor*.js)
+* 데이터 저장은 localStorage에 저장
+* 수정 페이지에서 삭제 가능
+
+
+
+
+
+### 3️⃣ 일기 상세 (Read)
+
+![image-20230628203909549](images/image-20230628203909549.png)
+
+* 감정과 글을 볼 수 있습니다
+* 수정으로 바로 넘어갈 수 있습니다.
 
 
 
@@ -286,7 +324,7 @@ return <div className="DiaryList">
 
 
 
-### firebase를 이용한 배포
+### 🦊 firebase를 이용한 배포
 
 * 배포 과정 (명령 프롬프트)
 
