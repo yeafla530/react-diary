@@ -24,9 +24,15 @@ https://yerm-react-diary.web.app/
 
 #### ▶ 기술 정리
 
-[Emotion-Diary React 기술 정리](./README2.md)
+[Emotion-Diary React 기술 정리](./study/README2.md)
 
 [React 기본 문법 정리](./react-diary/README.md)
+
+
+
+## ✅ Update
+
+1. [test-library/react 적용하기](./study/JEST_적용하기.md)
 
 
 
