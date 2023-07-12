@@ -88,7 +88,17 @@ npm install --save-dev @testing-library/react
 
 
 
-## ✅ 기본 개념
+#### 설치 요약
+
+```
+npm install --save-dev jest babel-jest @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript ts-jest @types/jest react-test-renderer jest-environment-jsdom @testing-library/react @testing-library/jest-dom
+```
+
+
+
+
+
+## ✅ jest 기본 개념
 
 ### 기본 구조
 
@@ -317,6 +327,118 @@ describe('stats', () => {
 2. 실제 DOM에 대해 신경을 많이 쓰고 컴포넌트의 인스턴스에 대해 신경쓰지 않고, 실제 화면에 무엇이 보여지는지, 어떤 이벤트가 발생했을 때 화면에 원하는 변화가 생겼는지 이런것을 확인하기에 더 최적화 되어 있음
 3. jest-dom을 이용해 DOM에 관련된 `matcher`를 추가해줌
 4. react 공식문서에서도 추천하는 testing방법
+5. react-test-library 모듈이 @testing-library/react로 옮겨짐
+
+
+
+### react 폴더 생성
+
+```
+-- create react app 
+npx create-react-app rtl-tutorial
+npm install @testing-library/any-framework
+```
+
+
+
+### 예시
+
+
+
+
+
+
+
+
+
+### 에러 수정
+
+#### 문제1. debug 
+
+* Unexpected debug statement
+
+![image-20230712200516568](images/image-20230712200516568.png)
+
+#### 원인
+
+참고 자료: [no-debugging-utils](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-debugging-utils.md)
+
+console.log 문이 브라우저의 출력을 오염시키는 것처럼 debug도 push되어서는 안된다
+
+아래 코드들은 push되어선 안되기 때문에 red line이 쳐진 것. 주석처리 후 push하면 된다
+
+```js
+// 1
+const { debug } = render(<Hello />);
+debug();
+
+// 2
+const utils = render(<Hello />);
+utils.debug();
+
+// 3
+import { screen } from '@testing-library/dom';
+screen.debug();
+
+// 4
+const { screen } = require('@testing-library/react');
+screen.debug();
+```
+
+
+
+#### 문제2. toBeInTheDocument is not function
+
+*  expect(...).toBeInTheDocument is not function 에러 확인
+
+
+
+##### 원인
+
+jest관련 import 문 없음
+
+
+
+##### 해결방법
+
+> 루트 위치에 setUpTests.js 파일 생성하여 jest관련 설정을 중앙 집중화 시킨다
+
+* 각 테스트 파일에서 @testing-library를 사용하기 위해 필요한 코어를 import한다.
+
+* 이는 Jest의 config파일에서 사용되며 이를 통해 import의 반복을 줄일 수 있다.
+
+
+
+0. 라이브러리 설치
+
+   ```
+   @testing-library/jest-dom
+   @types/testing-library__jest-dom
+   ```
+
+1. app/src/setupTests.js 파일 생성
+
+   ```js
+   // jreact-testing-library: jsdom 도구 사용해 document.body 에 리액트 컴포넌트를 렌더링
+   // clean-up-after-each: 각 테스트 케이스가 끝날때마다 기존에 가상의 화면에 남아있는 UI를 정리
+   import '@testing-library/react'
+   // jest에서 DOM관련된 'matcher'를 사용할 수 있게 해줌
+   import 'jest-dom/extend-expect'
+   import '@testing-library/jest-dom'
+   
+   ```
+
+2. app/jest.config.js 생성 후 코드 작성
+
+   ```js
+   export default {
+       setupFilesAfterEnv: ['./src/setupTests.js'],
+   }
+   ```
+
+   
+
+
 
 
 
@@ -327,3 +449,5 @@ describe('stats', () => {
 * https://gatsbybosungblogmain.gatsbyjs.io/tdd2/
 
 * https://learn-react-test.vlpt.us/#/01-javascript-testing?id=%ec%b2%ab%eb%b2%88%ec%a7%b8-%ed%85%8c%ec%8a%a4%ed%8a%b8-%ec%9e%91%ec%84%b1%ed%95%98%ea%b8%b0
+
+* https://www.youtube.com/watch?v=K1w6WN7q6k8
