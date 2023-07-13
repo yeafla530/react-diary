@@ -321,7 +321,7 @@ describe('stats', () => {
 
 ## ✅ react-test-library
 
-### 특징
+### 🔴 특징
 
 1. 렌더링 결과에 집중
 2. 실제 DOM에 대해 신경을 많이 쓰고 컴포넌트의 인스턴스에 대해 신경쓰지 않고, 실제 화면에 무엇이 보여지는지, 어떤 이벤트가 발생했을 때 화면에 원하는 변화가 생겼는지 이런것을 확인하기에 더 최적화 되어 있음
@@ -331,7 +331,7 @@ describe('stats', () => {
 
 
 
-### react 폴더 생성
+### 🔴 react 폴더 생성
 
 ```
 -- create react app 
@@ -341,17 +341,343 @@ npm install @testing-library/any-framework
 
 
 
-### 예시
+### 🔴 기본 문법: 찾기
+
+#### getBy : 하나의 요소만 가져올 수 있다
+
+* getByText(): text로 가져오기
+
+  * `/로그인 해주세요/` : 일부 text만 작성가능
+  * `"로그인 해주세요"` : `""`로 작성할 경우 일부 text만 적으면 찾지 못함
+
+  ```js
+  test("제목이 있다", () => {
+      render(<MyPage />)
+      const titleEl = screen.getByText("안녕")
+      expect(titleEl).toBeInTheDocument()
+  })
+  ```
+
+  
+
+* getByRole(): HTML 요소로 가져오기
+
+  > 요소가 여러개일때는 못가져옴 
+  >
+  > level을 통해 몇번째 인자를 가져올지 설정가능
+
+  * h1 ~ h6 : heading
+  * button: button
+  * input, textarea : textbox
+  * a : link
+  * checkbox: checkbox
+  * radio: radio
+  * select: combobox
+
+  ```jsx
+  export default function MyPage() {
+      return (
+          <div>
+              <div>
+                  <h1>안녕</h1>
+                  <h2>world</h2>
+              </div>
+              <div>
+                  <label htmlFor="username">이름</label>
+                  <input type="text" id="username"/>
+              </div>
+              <div>
+                  <label htmlFor="profile">자기소개</label>
+                  <textarea id="profile"/>
+              </div>
+          </div>
+      )
+  }
+  ```
+
+  ```js
+  import {render, screen} from "@test-library/react"
+  import MyPage from "./MyPage"
+  
+  // 요소가 여러개일 때 level을 통해 하나의 요소만 정함 
+  test("제목이 있다", () => {
+      render(<MyPage />)
+      // getByRole : heading이 여러개면 못가져옴
+      // level: heading요소중 첫번째것 (h1)
+      const titleEl = screen.getByRole("heading", {
+          level: 1,
+      })
+      expect(titleEl).toBeInTheDocument()
+  })
+  
+  
+  // textbox가 여러개일 경우 label의 name을 통해 하나의 요소만 찾아낸다
+  test("input요소가 있다", () => {
+      render(<MyPage/>)
+      const inputEl = screen.getByRole("textbox", {
+          name: "자기소개",
+      })
+      expect(inputEl).toBeInTheDocument();
+  })
+  ```
+
+  
+
+* getByAltText(): 이미지의 alt text가져오기
+
+  ```js
+  test("로고 이미지가 잘 나온다", () => {
+  	render(<App/>)
+  	const logoEl = screen.getByAltText("logo")
+  	expect(logoEl).toBeInTheDocument()
+  })
+  ```
+
+  
+
+* getByLabelText(): label의 text를 이용해 textbox를 찾아준다
+
+  ```jsx
+   <div>
+       <label htmlFor="profile">자기소개</label>
+       <textarea id="profile"/>
+   </div>
+  ```
+
+  ```js
+  test("input요소가 있다", () => {
+      render(<MyPage/>)
+  	// label의 textbox를 찾아줌
+  	// 자기소개 label이 여러개일 때, selector를 이용해 textarea인지 input인지 설정가능
+  	// readOnly가 아닐 경우 onChange를 넣어야 에러가 나지 않음
+  	const inputEl = screen.getByLabelText("자기소개", {
+  		selector: "textarea"
+  	})
+      expect(inputEl).toBeInTheDocument();
+  })
+  ```
+
+
+
+* getByDisplayValue() : textbox의 value를 찾아줌
+
+  ```jsx
+  <div>
+      <label htmlFor="username">이름</label>
+      <input type="text" id="username" value="Tom" readOnly/>
+  </div>
+  ```
+
+  ```js
+  test("getByDisplayValue로 요소찾기", () => {
+      render(<MyPage/>)
+      const inputEl = screen.getByDisplayValue("Tom")
+      expect(inputEl).toBeInTheDocument();
+  })
+  ```
+
+
+
+* getByTextId(): 요소안의 data-testid의 값으로 찾아줌
+
+  ```jsx
+  {/* 의미없는요소 */}
+  <div data-testid="my-div"/>
+  ```
+
+  ```js
+  // 최후의 수단
+  test("my div가 있다", () => {
+      render(<MyPage/>)
+      const inputEl = screen.getByTestId("my-div")
+      expect(inputEl).toBeInTheDocument()
+  })
+  ```
+
+
+
+#### getAllBy: DOM특정 모든 요소들 가져오기
+
+> 매칭되는 요소들의 배열을 반환하고 일치하는게 없다면 에러가 난다
+
+![image-20230713200954993](images/image-20230713200954993.png)
+
+
+
+* getByAllRole(listitem)
+
+  * toHaveLength로 개수 체크 가능
+  * 만약 빈 배열로 넘겨줬다면, li가 생성되지 않아 에러가 남
+
+  ```js
+  const users = ["Tom", "Jane", "Mike"]
+  test("li는 3개 있다", () => {
+      render(<UserList users={users}/>)
+      const liElements = screen.getAllByRole("listitem")
+      expect(liElements).toHaveLength(users.length); // 개수 체크
+  })
+  ```
+
+
+
+#### queryBy / queryAllBy: 없는 요소 찾기에 적합
+
+> 요소가 없는 경우 에러를 반환하지 않고, null이나 빈배열을 반환한다 
+>
+> 없는 요소를 찾는 경우 적합하다
+
+* queryByRole / queryAllByRole
+
+  ```
+  // null 반환
+  test("queryByRole 빈 배열을 넘겨준 경우 요소에 없다", () => {
+      render(<UserList users={[]}/>)
+      const liElements = screen.queryByRole("listitem")
+      expect(liElements).not.toBeInTheDocument()
+  })
+  
+  // 빈 배열을 반환한다
+  test("queryAllByRole 빈 배열 넘겨준 경우0개", () => {
+      render(<UserList users={[]}/>)
+      const liElements = screen.queryAllByRole("listitem")
+      expect(liElements).toHaveLength(0); // 개수 체크
+  })
+  ```
+
+
+
+#### findBy : Promise반환
+
+> Promise를 반환, 찾는 요소가 있으면 resolve, 없으면 reject
+>
+> 최대 1초를 기다리며 해당 요소가 있는지 판별
+
+
+
+* findByRole : 요소를 시간 안에 찾을 수 있는지 체크
+
+```jsx
+import {useState, useEffect} from "react"
+
+export default function UserList({users}) {
+    const [showTitle, setShowTitle] = useState(false)
+    useEffect(()=>{
+        setTimeout(()=>{
+            setShowTitle(true)
+        }, 500)
+    }, [])
+    return (
+        <>
+            {showTitle && <h1>사용자 목록</h1>}
+            <ul>
+                {users.map(user => (
+                    <li key={user}>{user}</li>
+                ))}
+            </ul>
+        </>
+    )
+}
+```
+
+```js
+test("잠시 후 제목이 나타난다", async () => {
+    render(<UserList users={users}/>)
+     const titleEl = await screen.findByRole("heading", {
+     name: "사용자 목록"
+     }, {
+    	// 시간 변경하고 싶은 경우 timeout요소 추가
+    	timeout: 2000
+	})
+	expect(titleEl).toBeInTheDocument();
+})
+
+```
+
+
+
+### 🔴 기본 문법 : 유저 이벤트
+
+> package.json "@testing-library/user-event": "^13.5.0", 13버전은 더이상 지원 안함
+>
+> 14버전으로 업데이트
+
+```bash
+// package.json에서 user-event삭제 후
+npm install --save @testing-library/user-event
+```
+
+
+
+* userEvent
+
+  * Promise를 반환하기 때문에 async, await 비동치 처리
+
+  > 버튼을 누를때마다 login, logout이 변경되는 코드 테스트
+
+  ```jsx
+  import {useState} from "react"
+  
+  export default function Login() {
+      const [isLogin, setIsLogin] = useState(false)
+  
+      const onClickHandler = () => {
+          setIsLogin(!isLogin)
+      }
+  
+      return(
+          <>
+              <button onClick={onClickHandler}>{isLogin ? "Logout" : "Login"}</button>
+          </>
+      )
+  
+  }
+  
+  
+  ```
+
+  ```js
+  import userEvent from '@testing-library/user-event'
+  
+  describe("Login test", () => {
+      test("처음에는 Login버튼이 있다", () => {
+          render(<Login/>)
+  
+          const btnEl = screen.getByRole("button")
+          expect(btnEl).toHaveTextContent("Login")
+      })
+  
+      const user = userEvent.setup()
+      test("click button", async () => {
+          render(<Login/>)
+          const btnElement = screen.getByRole("button")
+          await user.click(btnElement)
+          expect(btnElement).toHaveTextContent("Logout")
+      
+      })
+  
+      test("tab, space, enter 동작", async () => {
+          render(<Login />)
+          const btnEl = screen.getByRole("button")
+          expect(btnEl).toBeInTheDocument()
+          await user.tab()
+          screen.debug()
+          await user.keyboard(" ")
+          await user.keyboard(" ")
+          screen.debug()
+          await user.keyboard("{Enter}")
+          screen.debug()
+          expect(btnEl).toHaveTextContent("Logout")
+      })
+  })
+  ```
+
+  
 
 
 
 
 
-
-
-
-
-### 에러 수정
+### 🔴 에러 수정
 
 #### 문제1. debug 
 
@@ -431,9 +757,20 @@ jest관련 import 문 없음
 2. app/jest.config.js 생성 후 코드 작성
 
    ```js
-   export default {
-       setupFilesAfterEnv: ['./src/setupTests.js'],
+   const config = {
+       testEnvironment: 'jsdom',
+       setupFilesAfterEnv: ['<rootDir>/src/setupTests.js']
    }
+   
+   module.exports = config
+   ```
+
+3. multiple jest erro => package.json 코드 삭제
+
+   ```
+   "jest": {
+   	"testEnvironment": "jsdom"
+   },
    ```
 
    
@@ -451,3 +788,4 @@ jest관련 import 문 없음
 * https://learn-react-test.vlpt.us/#/01-javascript-testing?id=%ec%b2%ab%eb%b2%88%ec%a7%b8-%ed%85%8c%ec%8a%a4%ed%8a%b8-%ec%9e%91%ec%84%b1%ed%95%98%ea%b8%b0
 
 * https://www.youtube.com/watch?v=K1w6WN7q6k8
+* https://www.youtube.com/watch?v=pGOjg4hMf3A
