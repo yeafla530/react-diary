@@ -198,7 +198,7 @@ return <div className="DiaryList">
 
 ### 1. 시간순 정렬 (최신순, 오래된순)
 
-<img src="images/최신순_오래된순.png" alt="최신순_오래된순" style="zoom:25%;" />
+<img src="images/최신순_오래된순.png" alt="최신순_오래된순" style="zoom:35%;" />
 
 <br/>
 
@@ -206,7 +206,7 @@ return <div className="DiaryList">
 
 ### 2. 감정 (좋은 감정 / 안좋은 감정)
 
-<img src="images/좋은감정_안좋은감정.png" alt="좋은감정_안좋은감정" style="zoom:25%;" />
+<img src="images/좋은감정_안좋은감정.png" alt="좋은감정_안좋은감정" style="zoom:35%;" />
 
 <br/>
 
@@ -231,7 +231,7 @@ return <div className="DiaryList">
 
 ### 3️⃣ 일기 상세 (Read)
 
-<img src="images/image-20230628203909549.png" alt="image-20230628203909549" style="zoom:25%;" />
+<img src="images/image-20230628203909549.png" alt="image-20230628203909549" style="zoom:35%;" />
 
 * 감정과 글을 볼 수 있습니다
 * 수정으로 바로 넘어갈 수 있습니다.
