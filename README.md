@@ -30,9 +30,9 @@ https://yerm-react-diary.web.app/
 
 
 
-## ✅ Update
+## ✅ 새로 공부한 내용
 
-1. [test-library/react 적용하기](./study/JEST_적용하기.md)
+1. [test-library/react 적용하기](https://github.com/yeafla530/jest-practice)
 
 
 
@@ -219,7 +219,7 @@ return <div className="DiaryList">
 
 ### 3️⃣ 일기 상세 (Read)
 
-![image-20230628203909549](images/image-20230628203909549.png)
+<img src="images/image-20230628203909549.png" alt="image-20230628203909549" style="zoom:50%;" />
 
 * 감정과 글을 볼 수 있습니다
 * 수정으로 바로 넘어갈 수 있습니다.
