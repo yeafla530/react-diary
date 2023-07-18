@@ -14,7 +14,7 @@ react router를 사용했으며, 상태관리는 Context를 사용하여 props d
 
 ## 🔗 정리
 
-#### ▶ 배포 사이트 URL
+### ▶ 배포 사이트 URL
 
 <img src="images/image-20230628202201555.png" alt="image-20230628202201555" style="zoom: 80%;" />
 
@@ -22,7 +22,7 @@ https://yerm-react-diary.web.app/
 
 
 
-#### ▶ 기술 정리
+### ▶ 기술 정리
 
 [Emotion-Diary React 기술 정리](./study/README2.md)
 
@@ -30,7 +30,9 @@ https://yerm-react-diary.web.app/
 
 
 
-## ✅ 새로 공부한 내용
+
+
+## ✅ 학습 및 Update
 
 1. [test-library/react 적용하기](https://github.com/yeafla530/jest-practice)
 
@@ -51,19 +53,25 @@ npm start
 
 
 
+
+
 ## ✅ 기능소개
 
 ### 1️⃣ Home
 
 
 
-#### 1. Header
+### 1. Header
 
 * 앞 뒤 버튼 클릭 시 한달씩 날짜가 변경된다
 
+
+
 ![image-20230306150316652](./images/녹화_2023_03_18_06_45_53_681.gif)
 
-##### 코드 설명
+
+
+### 코드 설명
 
 ```jsx
 const [data, setData] = useState([])
@@ -122,9 +130,9 @@ return (
 
 
 
-#### 2. 정렬 및 필터
+### 2. 정렬 및 필터
 
-#### 코드 설명
+### 코드 설명
 
 > 감정필터와 시간순 정렬을 통해 뽑아진 array를return 해준다. 
 
@@ -157,6 +165,10 @@ const getProcessDiaryList = () => {
 }
 ```
 
+
+
+
+
 > DiaryList에서 필터링된 리스트를 받아준다
 
 ```jsx
@@ -172,31 +184,19 @@ return <div className="DiaryList">
 
 
 
-1. 시간순 정렬 (최신순, 오래된순)
+### 1. 시간순 정렬 (최신순, 오래된순)
 
-   
+<img src="images/최신순_오래된순.png" alt="최신순_오래된순" style="zoom:50%;" />
 
-   * 최신순
 
-   <img src="images/image-20230620195834954.png" alt="image-20230620195834954" style="zoom:50%;" />
 
-   
 
-   * 오래된 순
 
-   <img src="images/image-20230620195858158.png" alt="image-20230620195858158" style="zoom:50%;" />
+### 2. 감정 (좋은 감정 / 안좋은 감정)
 
-   
+<img src="images/좋은감정_안좋은감정.png" alt="좋은감정_안좋은감정" style="zoom:50%;" />
 
-2. 감정 필터
 
-   * 좋은 감정만
-
-   <img src="images/image-20230620200514868.png" alt="image-20230620200514868" style="zoom:50%;" />
-
-   * 안좋은 감정만
-
-     <img src="images/image-20230620200555947.png" alt="image-20230620200555947" style="zoom:50%;" />
 
 
 
@@ -204,14 +204,14 @@ return <div className="DiaryList">
 
 ### 2️⃣ 일기 작성 및 수정(Create / Update)
 
-![image-20230628202658767](images/image-20230628202658767.png)
-
-
-
-* 날자와 감정, 글 작성 후 작성 완료
+* 날짜와 감정, 글 작성 후 작성 완료
 * 동일한 부분은 component 생성 (*pages/DiaryEditor*.js)
 * 데이터 저장은 localStorage에 저장
 * 수정 페이지에서 삭제 가능
+
+![image-20230628202658767](images/image-20230628202658767.png)
+
+
 
 
 
@@ -228,6 +228,8 @@ return <div className="DiaryList">
 
 
 
+
+
 ## ✅ 최적화
 
 ### 문제점
@@ -238,7 +240,11 @@ return <div className="DiaryList">
 
 
 
+
+
 ### 해결방법
+
+
 
 1. React.memo를 사용하여 고착 컴포넌트로 만든다
 
@@ -266,51 +272,55 @@ return <div className="DiaryList">
 
 2. React.memo사용시 useCallback처리도 함께 되어야하는데 useState를 이용한 set함수는 자체만으로 useCallback처리가 되기 때문에 따로 적용해주지 않아도됨
 
+
+
 3. handle함수를 따로 만들게 되면 useCallback까지 처리해 주어야함
 
-   ```js
-   // 이처럼 사용하기 위해서는 useCallback까지 적용해주어야함
-   const handleSetSortType = (sortType) => {
-       setSortType(sortType)
-   }
-   ```
+```js
+// 이처럼 사용하기 위해서는 useCallback까지 적용해주어야함
+const handleSetSortType = (sortType) => {
+    setSortType(sortType)
+}
+```
 
-   
+
 
 4. useCallback 적용
 
-   ```js
-   // 최적화4. useCallback으로 메모이제이션 진행
-   // 가장 최신의 state를 받아올 필요는 없으므로
-   // 함수형 업데이트는 진행하지 않는다
-   // 함수형 업데이트 : setData((data) => [newItem, ...data]);
-   const handleClickEmote = useCallback((emotion) => {
-   	setEmotion(emotion)
-   }, [])
-   ```
+```js
+// 최적화4. useCallback으로 메모이제이션 진행
+// 가장 최신의 state를 받아올 필요는 없으므로
+// 함수형 업데이트는 진행하지 않는다
+// 함수형 업데이트 : setData((data) => [newItem, ...data]);
+const handleClickEmote = useCallback((emotion) => {
+	setEmotion(emotion)
+}, [])
+```
 
-   * cf) 함수형 업데이트 : 값을 전달하지 않고 함수를 전달
+cf) 함수형 업데이트 : 값을 전달하지 않고 함수를 전달
 
-     data의 현재값을 참조할 수 있도록 하여 항상 최신의 state를 참조할 수 있도록 도와줌
+data의 현재값을 참조할 수 있도록 하여 항상 최신의 state를 참조할 수 있도록 도와줌
 
-     ```
-     const onCreate = useCallback(
-       (author, contents, emotion) => {
-         const created_date = new Date().getTime();
-         const newItem = {
-           author,
-           contents,
-           emotion,
-           created_date,
-           id: dataId.current,
-         };
-         dataId.current += 1;
-         // 함수형 업데이트
-         setData([newItem, ...data]);
-       },
-       [data]
-     );
-     ```
+```jsx
+const onCreate = useCallback(
+  (author, contents, emotion) => {
+    const created_date = new Date().getTime();
+    const newItem = {
+      author,
+      contents,
+      emotion,
+      created_date,
+      id: dataId.current,
+    };
+    dataId.current += 1;
+    // 함수형 업데이트
+    setData([newItem, ...data]);
+  },
+  [data]
+);
+```
+
+
 
 
 
