@@ -51,7 +51,6 @@ npm start
 
 <br/>
 
-<br/>
 
 
 
@@ -71,7 +70,10 @@ npm start
 
 <br/>
 
-### 코드 설명
+#### 코드 설명
+<details>
+<summary>접기/펼치기</summary>
+<div>
 
 ```jsx
 const [data, setData] = useState([])
@@ -80,11 +82,11 @@ const [curDate, setCurDate] = useState(new Date())
 // 바뀐 년원에 따라 리스트 불러오기
 useEffect(()=>{
     // 일기가 있으면 적용
-	if (diaryList.length >= 1) {
+    if (diaryList.length >= 1) {
         // 해당 월의 1일이 됨
         const firstDay = new Date(
-        	curDate.getFullYear(), 
-        	curDate.getMonth(),
+            curDate.getFullYear(), 
+            curDate.getMonth(),
         1).getTime();
 
         // 오늘 월의 마지막 날 (30/31/28일) => 시, 분, 초까지 바꿔줘야함
@@ -99,26 +101,26 @@ useEffect(()=>{
 
         // 바뀐 년월에 따라 리스트 불러오기
         setData(diaryList.filter((it) => firstDay <= it.date && it.date <= lastDay))
-	}
+    }
 
 
 },[diaryList, curDate]) // diaryList를 넣어주어야 일기 생성, 수정, 삭제시 다이어리 리스트도 변경됨
 
 
-	// 한달씩 미래로
+    // 한달씩 미래로
     const increaseMonth = () => {
         setCurDate(new Date(curDate.getFullYear(), curDate.getMonth()+1, curDate.getDate()))
     }
     // 한달씩 과거로
     const decreaseMonth = () => {
         setCurDate(new Date(curDate.getFullYear(), curDate.getMonth()-1, curDate.getDate()))
-    }
+}
 
 
 return (
     // Header
     <div>
-    	<MyHeader 
+        <MyHeader 
         headText={headText} 
         leftChild={<MyButton text={'<'} onClick={decreaseMonth}/>} 
         rightChild={<MyButton text={'>'} onClick={increaseMonth}/>}/>
@@ -126,6 +128,8 @@ return (
 )
 ```
 
+</div>
+</details>
 <br/>
 
 <br/>
@@ -134,9 +138,13 @@ return (
 
 <br/>
 
-### 코드 설명
+#### 코드 설명
 
 > 감정필터와 시간순 정렬을 통해 뽑아진 array를return 해준다. 
+
+<details>
+<summary>접기/펼치기</summary>
+<div>
 
 ```javascript
 // DiaryList정렬된 리스트 반환하는 함수
@@ -181,6 +189,8 @@ return <div className="DiaryList">
     ))}
 </div>
 ```
+</div>
+</details>
 
 <br/>
 
@@ -242,10 +252,11 @@ return <div className="DiaryList">
 
 <br/>
 
-<br/>
 
-### 해결방법
-
+#### 해결방법
+<details>
+<summary>접기/펼치기</summary>
+<div>
 
 
 1. React.memo를 사용하여 고착 컴포넌트로 만든다
@@ -322,7 +333,8 @@ const onCreate = useCallback(
 );
 ```
 
-<br/>
+</div>
+</details>
 
 <br/>
 
@@ -338,7 +350,6 @@ const onCreate = useCallback(
   serve -s build
   ```
 
-  <br/>
 
 <br/>
 
