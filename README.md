@@ -10,7 +10,7 @@ react router를 사용했으며, 상태관리는 Context를 사용하여 props d
 
 향후 피드백을 통해 업데이트를 진행할 예정입니다.
 
-
+<br/>
 
 ## 🔗 정리
 
@@ -20,7 +20,7 @@ react router를 사용했으며, 상태관리는 Context를 사용하여 props d
 
 https://yerm-react-diary.web.app/
 
-
+<br/>
 
 ### ▶ 기술 정리
 
@@ -28,17 +28,17 @@ https://yerm-react-diary.web.app/
 
 [React 기본 문법 정리](./react-diary/README.md)
 
+<br/>
 
-
-
+<br/>
 
 ## ✅ 학습 및 Update
 
 1. [test-library/react 적용하기](https://github.com/yeafla530/jest-practice)
 
+<br/>
 
-
-
+<br/>
 
 ## ✅ how to start
 
@@ -49,9 +49,9 @@ cd emotion-diary
 npm start
 ```
 
+<br/>
 
-
-
+<br/>
 
 
 
@@ -59,7 +59,7 @@ npm start
 
 ### 1️⃣ Home
 
-
+<br/>
 
 ### 1. Header
 
@@ -69,7 +69,7 @@ npm start
 
 ![image-20230306150316652](./images/녹화_2023_03_18_06_45_53_681.gif)
 
-
+<br/>
 
 ### 코드 설명
 
@@ -126,11 +126,13 @@ return (
 )
 ```
 
+<br/>
 
-
-
+<br/>
 
 ### 2. 정렬 및 필터
+
+<br/>
 
 ### 코드 설명
 
@@ -165,9 +167,9 @@ const getProcessDiaryList = () => {
 }
 ```
 
+<br/>
 
-
-
+<br/>
 
 > DiaryList에서 필터링된 리스트를 받아준다
 
@@ -180,27 +182,27 @@ return <div className="DiaryList">
 </div>
 ```
 
+<br/>
 
-
-
+<br/>
 
 ### 1. 시간순 정렬 (최신순, 오래된순)
 
 <img src="images/최신순_오래된순.png" alt="최신순_오래된순" style="zoom:50%;" />
 
+<br/>
 
-
-
+<br/>
 
 ### 2. 감정 (좋은 감정 / 안좋은 감정)
 
 <img src="images/좋은감정_안좋은감정.png" alt="좋은감정_안좋은감정" style="zoom:50%;" />
 
+<br/>
 
+<br/>
 
-
-
-
+<br/>
 
 ### 2️⃣ 일기 작성 및 수정(Create / Update)
 
@@ -211,11 +213,11 @@ return <div className="DiaryList">
 
 ![image-20230628202658767](images/image-20230628202658767.png)
 
+<br/>
 
+<br/>
 
-
-
-
+<br/>
 
 ### 3️⃣ 일기 상세 (Read)
 
@@ -224,11 +226,11 @@ return <div className="DiaryList">
 * 감정과 글을 볼 수 있습니다
 * 수정으로 바로 넘어갈 수 있습니다.
 
+<br/>
 
+<br/>
 
-
-
-
+<br/>
 
 ## ✅ 최적화
 
@@ -238,9 +240,9 @@ return <div className="DiaryList">
 2. 최신순/오래된 순 변경시 diaryItem 리렌더링 발생
 3. 일기 수정 페이지 -> 내용 수정시 감정 이모지에도 리렌더링 발생
 
+<br/>
 
-
-
+<br/>
 
 ### 해결방법
 
@@ -268,11 +270,11 @@ return <div className="DiaryList">
    })
    ```
 
-   
+   <br/>
 
 2. React.memo사용시 useCallback처리도 함께 되어야하는데 useState를 이용한 set함수는 자체만으로 useCallback처리가 되기 때문에 따로 적용해주지 않아도됨
 
-
+<br/>
 
 3. handle함수를 따로 만들게 되면 useCallback까지 처리해 주어야함
 
@@ -283,7 +285,7 @@ const handleSetSortType = (sortType) => {
 }
 ```
 
-
+<br/>
 
 4. useCallback 적용
 
@@ -320,11 +322,11 @@ const onCreate = useCallback(
 );
 ```
 
+<br/>
 
+<br/>
 
-
-
-
+<br/>
 
 ## ✅build 및 배포
 
@@ -336,9 +338,9 @@ const onCreate = useCallback(
   serve -s build
   ```
 
-  
+  <br/>
 
-
+<br/>
 
 ### 🦊 firebase를 이용한 배포
 
@@ -365,3 +367,5 @@ const onCreate = useCallback(
      ```
 
      
+
+<br/>
